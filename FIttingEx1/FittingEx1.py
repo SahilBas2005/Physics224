@@ -9,8 +9,13 @@ uncertainty = data[:,2]
 
 #linear fit
 
-def f(x, a, b):
-    return a*x + b
+#def f(x, a, b):
+#    return a*x + b
+
+#quadratic fit
+
+def f(x, a, b, c):
+    return a*x**2 + b*x + c
 
 popt, pcov = curve_fit(f, year, mean, sigma=uncertainty, absolute_sigma=True)
 plt.figure(figsize=(10, 8))
@@ -21,7 +26,7 @@ plt.plot(year, f(year, *popt), label='fit')
 plt.xlabel('Year')
 plt.ylabel('CO2 concentration (ppm)')
 plt.legend()
-plt.title('Linear Fit')
+plt.title('Quadratic Fit')
 
 plt.xticks(np.arange(int(year.min()), int(year.max()) + 1, 2)) 
 
@@ -37,7 +42,10 @@ plt.title('Residuals')
 plt.xticks(np.arange(int(year.min()), int(year.max()) + 1, 2)) 
 
 plt.tight_layout()
-plt.savefig('Exercise 1')
 print('a =', popt[0])
 print('b =', popt[1])
-print('r^2 =', np.corrcoef(mean, f(year, *popt))[0,1]**2)
+print('c =', popt[2])
+print('chi2 =', np.sum((residuals/uncertainty)**2)/(len(year)-3))
+plt.savefig('Exercise 1-2.png')
+
+
