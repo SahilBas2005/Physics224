@@ -48,4 +48,13 @@ print('c =', popt[2])
 print('chi2 =', np.sum((residuals/uncertainty)**2)/(len(year)-3))
 plt.savefig('Exercise 1-2.png')
 
+a = popt[0]
+b = popt[1]
+c = popt[2]
+chi2 = np.sum((residuals/uncertainty)**2)/(len(year)-3)
 
+print(a, b, c, chi2)
+
+data_2060 = f(2060, a, b, c)
+data_1960 = f(1960, a, b, c)
+print(data_2060, data_1960)
