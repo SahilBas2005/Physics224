@@ -41,21 +41,27 @@ plt.show()
 
 chi_2 = reduced_chi_squared(time, data_1, exponential(time, *popt), unc, 3)
 
-max_time = time[np.argmax(data_1)]
-max_10 = max_time*0.1
-max_90 = max_time*0.9
+def get_prediction(threshold, independent_range, model_data):
+    for i in range(len(model_data)):
+        if model_data[i] > threshold:
+            return independent_range[i]
+#bugged get_prediction function giving NoneType
 
-fall_time = np.abs(max_10 - max_90)
+data_range = max(data_1) - min(data_1)
+voltage_10 = min(data_1) + 0.1 * data_range
+voltage_90 = min(data_1) + 0.9 * data_range
+
+fall_time = get_prediction(voltage_10, time, data_1) - get_prediction(voltage_90, time, data_1)
 
 data = np.loadtxt('/Users/hachemfattouh/Desktop/random files 5 the will to survive/Physics224-1/Osciloscope/osc_auto.csv', delimiter=',', skiprows=1)
 time = data[:,0][data[:,0] < -294.5000E-06]
 data_1 = data[:,1][data[:,0] < -294.5000E-06]
 
-max_time = time[np.argmax(data_1)]
-max_10 = max_time*0.1
-max_90 = max_time*0.9
+data_range = max(data_1) - min(data_1)
+voltage_10 = min(data_1) + 0.1 * data_range
+voltage_90 = min(data_1) + 0.9 * data_range
 
-rise_time = np.abs(max_90 - max_10)
+rise_time = get_prediction(voltage_90, time, data_1) - get_prediction(voltage_10, time, data_1)
 
 print(fall_time)
 print(rise_time)
