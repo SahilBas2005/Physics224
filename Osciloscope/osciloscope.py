@@ -3,12 +3,6 @@ import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 
 data = np.loadtxt('/Users/hachemfattouh/Desktop/random files 5 the will to survive/Physics224-1/Osciloscope/osc.csv', delimiter=',', skiprows=1)
-#time = data[:,0][data[:,0] < -100.0000E-06]
-#data_1 = data[:,1][data[:,0] < -100.0000E-06]
-#data_2 = data[:,2][data[:,0] < -100.0000E-06]
-#
-#time_offset = -500.0000E-06
-#time = time - time_offset
 
 time = data[:,0]
 data_1 = data[:,1]
@@ -35,9 +29,15 @@ def linear_fit(x, a, b):
     return a*x + b
 
 plt.scatter(time, data_1, label='Data 1')
-popt, pcov = curve_fit(exponential, time, data_1, sigma = unc) #p0=[1000000000000,10e-4, data_1[0]])
+popt, pcov = curve_fit(exponential, time, data_1, sigma = unc)
 plt.plot(time, exponential(time, *popt), label='Fit 1')
+plt.errorbar(time, data_1, yerr=unc, fmt='o')
 plt.legend()
 plt.show()
 
-print(popt)x
+residuals = data_1 - exponential(time, *popt)
+plt.scatter(time, residuals)
+plt.axhline(0, color='black', lw=1, linestyle='--')
+plt.show()
+
+chi_2 = reduced_chi_squared(time, data_1, exponential(time, *popt), unc, 3)
