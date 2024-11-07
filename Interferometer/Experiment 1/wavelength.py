@@ -9,31 +9,33 @@ def reduced_chi_squared(x, y, y_exp, unc, params):
 
     return chi_squared / (len(y) - params)
 
-data = np.loadtxt('/Users/hachemfattouh/Desktop/random files 5 the will to survive/Physics224-1/Interferometer/Experiment 1/knob.csv', delimiter=',', skiprows=1)
+data = np.loadtxt('knob.csv', delimiter=',', skiprows=1)
 fringes = data[:,0]
 knob = data[:,1]
-unc = data[:,2]
+x_unc = data[:,2]
+y_unc = data[:,3]
 
 def f(x, λ):
     return 2*x/λ
 
-popt, pcov = curve_fit(f, fringes, knob, sigma=unc, p0=[0.5])
+popt, pcov = curve_fit(f, knob, fringes, sigma=x_unc, p0=[0.5])
+pstd = np.sqrt(np.diag(pcov))
 
-plt.errorbar(fringes, knob, yerr=unc, fmt='o', label='Data')
-plt.plot(fringes, f(fringes, *popt), label='Fit')
-plt.xlabel('Number of Fringes')
-plt.ylabel('Knob Position (μm)')
+plt.errorbar(knob, fringes, xerr=x_unc, yerr=y_unc, fmt='o', label='Data')
+plt.plot(knob, f(knob, *popt), label='Fit')
+plt.ylabel('Number of Fringes')
+plt.xlabel('Knob Position (μm)')
 plt.legend()
 plt.show()
 
-residuals = knob - f(fringes, *popt)
-plt.scatter(fringes, residuals)
+residuals = fringes - f(knob, *popt)
+plt.errorbar(knob, residuals, xerr=x_unc, yerr=y_unc, fmt='o', label='Data')
 plt.axhline(0, color='black', lw=1, linestyle='--')
-plt.xlabel('Number of Fringes')
-plt.ylabel('Residuals (μm)')
+plt.xlabel('Knob Position (μm)')
+plt.ylabel('Residuals')
 plt.show()
 
-chi2 = reduced_chi_squared(fringes, knob, f(fringes, *popt), unc, 1)
+chi2 = reduced_chi_squared(knob, fringes, f(knob, *popt), x_unc, 1)
 print('Reduced Chi Squared:', chi2)
 pstd = np.sqrt(np.diag(pcov))
 print('Wavelength:', popt[0], 'μm')
