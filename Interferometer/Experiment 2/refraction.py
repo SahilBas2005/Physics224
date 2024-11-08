@@ -13,7 +13,7 @@ def reduced_chi_squared(x, y, y_exp, unc, params):
 
     return chi_squared / (len(y) - params)
 
-data = np.loadtxt('refraction.csv', delimiter=',', skiprows=1)
+data = np.loadtxt('/Users/hachemfattouh/Desktop/random files 5 the will to survive/Physics224-1/Interferometer/Experiment 2/refraction.csv', delimiter=',', skiprows=1)
 fringes = data[:,0]
 angle = data[:,1]
 x_unc = data[:,2]
@@ -30,14 +30,15 @@ plt.plot(angle, f(angle, *popt), label='Fit')
 plt.ylabel('Number of Fringes')
 plt.xlabel('Angle (radians)')
 plt.legend()
-plt.show()
+plt.savefig('refraction.png')
 
 residuals = fringes - f(angle, *popt)
 plt.errorbar(angle, residuals, xerr=x_unc, yerr=y_unc, fmt='o', label='Data')
 plt.axhline(0, color='black', lw=1, linestyle='--')
 plt.ylabel('Residuals')
 plt.xlabel('Angle (radians)')
-plt.show()
+plt.legend()
+plt.savefig('refraction_residuals.png')
 
 chi2 = reduced_chi_squared(angle, fringes, f(angle, *popt), x_unc, 1)
 print('Reduced Chi Squared:', chi2)
