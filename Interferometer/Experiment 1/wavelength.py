@@ -9,7 +9,7 @@ def reduced_chi_squared(x, y, y_exp, unc, params):
 
     return chi_squared / (len(y) - params)
 
-data = np.loadtxt('knob.csv', delimiter=',', skiprows=1)
+data = np.loadtxt('/Users/hachemfattouh/Desktop/random files 5 the will to survive/Physics224-1/Interferometer/Experiment 1/knob.csv', delimiter=',', skiprows=1)
 fringes = data[:,0]
 knob = data[:,1]
 x_unc = data[:,2]
@@ -26,16 +26,18 @@ plt.plot(knob, f(knob, *popt), label='Fit')
 plt.ylabel('Number of Fringes')
 plt.xlabel('Knob Position (μm)')
 plt.legend()
-plt.show()
+plt.savefig('wavelength.png')
 
 residuals = fringes - f(knob, *popt)
 plt.errorbar(knob, residuals, xerr=x_unc, yerr=y_unc, fmt='o', label='Data')
 plt.axhline(0, color='black', lw=1, linestyle='--')
 plt.xlabel('Knob Position (μm)')
 plt.ylabel('Residuals')
-plt.show()
+plt.legend()
+plt.savefig('wavelength_residuals.png')
 
 chi2 = reduced_chi_squared(knob, fringes, f(knob, *popt), x_unc, 1)
 print('Reduced Chi Squared:', chi2)
+pstd = np.sqrt(np.diag(pcov))
 print('Wavelength:', popt[0], 'μm')
 print('Uncertainty:', pstd[0], 'μm')
