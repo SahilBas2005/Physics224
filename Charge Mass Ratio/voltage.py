@@ -7,9 +7,10 @@ from scipy.optimize import curve_fit
 
 # Define constants
 mu_0 = 4*np.pi*10e-7
-R = 14.2*10e-2
+R = 13.2*10e-2
 n = 15
-k = ((mu_0*n)/(np.sqrt(2)*R))*(4/5)**(3/2)
+B_e = 1.49*10e-5
+k = ((mu_0*n)/R)*(4/5)**(3/2)
 current = 1.497
 
 
@@ -30,7 +31,7 @@ y_unc = (data[:,3]/2)*10e-2
 
 # Define model
 def f(x, em_ratio):
-    return (np.sqrt(x))/(np.sqrt(em_ratio)*k*(current + (-0.33/np.sqrt(2))))
+    return (np.sqrt(x))/(np.sqrt(em_ratio)*k*(current + (B_e/(np.sqrt(2)*k))))
 
 # Curve fit
 popt, pcov = curve_fit(f, voltage, radius, sigma=x_unc, maxfev=1000)

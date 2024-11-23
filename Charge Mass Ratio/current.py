@@ -7,8 +7,9 @@ from scipy.optimize import curve_fit
 
 # Define constants
 mu_0 = 4*np.pi*10e-7
-R = 14.2*10e-2
+R = 13.2*10e-2
 n = 15
+B_e = -1.49*10e-5
 k = ((mu_0*n)/(np.sqrt(2)*R))*(4/5)**(3/2)
 voltage = 304.501
 
@@ -21,16 +22,17 @@ def reduced_chi_squared(x, y, y_exp, unc, params):
 
     return chi_squared / (len(y) - params)
 
+
 # Load data
-data = np.loadtxt('var_current.csv', delimiter=',', skiprows=1)
+data = np.loadtxt('var_current.csv', delimiter=',', skiprows=2)
 current = data[:,0]
 x_unc = data[:,1]
 radius = (data[:,2]/2)*10e-2
 y_unc = (data[:,3]/2)*10e-2
 
 # Define model
-def f(x, em_ratio, I_0):
-    return (np.sqrt(voltage))/(np.sqrt(em_ratio)*k*(x + (I_0/np.sqrt(2))))
+def f(x, em_ratio):
+    return (np.sqrt(voltage))/(np.sqrt(em_ratio)*k*(x + (B_e/(np.sqrt(20)*k))))
 
 # Curve fit
 popt, pcov = curve_fit(f, current, radius, sigma=x_unc)
@@ -57,5 +59,3 @@ chi2 = reduced_chi_squared(current, radius, f(current, *popt), x_unc, 1)
 print('Reduced Chi Squared:', chi2)
 print('e/m:', popt[0])
 print('Uncertainty:', pstd[0])
-print('I:', popt[1])
-print('I:', pstd[1])

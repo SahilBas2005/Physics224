@@ -7,7 +7,7 @@ from scipy.optimize import curve_fit
 
 # Define constants
 mu_0 = 4*np.pi*10e-7
-R = 10.2*10e-2
+R = 13.2*10e-2
 n = 15
 
 
@@ -23,22 +23,22 @@ def get_b_field(current):
     return ((mu_0 * n * current) / R) * (4 / 5) ** (3 / 2)
 
 def correct_b_field(b_field, r):
-    return (b_field*(r**4)) / (R**4*(0.6583 + 0.29*(r/R)**2)**2)
+    return b_field*(1 - ((r**4) / (R**4*(0.6583 + 0.29*(r/R)**2)**2)))
 
 # Load data
 data = np.loadtxt('var_current.csv', delimiter=',', skiprows=1)
 current = data[:,0]
-x_unc = data[:,3]
+x_unc = (data[:,3]/2)*10e-2
 radius = (data[:,2]/2)*10e-2
 y_unc = get_b_field(data[:,1])
 b_coil = correct_b_field(get_b_field(current), radius)
 
 # Define model
 def f(x, a, B_e):
-    return a*(1/(x - 0.83)) - B_e  # Apply corrected current
+    return a*(1/x) - B_e  # Apply corrected current
 
 # Curve fit
-popt, pcov = curve_fit(f, radius, b_coil, sigma=x_unc,)
+popt, pcov = curve_fit(f, radius, b_coil, sigma=x_unc, p0= [5.9*10e-5, 2.3*10e-5])
 pstd = np.sqrt(np.diag(pcov))
 
 # Plot data
