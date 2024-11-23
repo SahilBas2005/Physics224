@@ -22,7 +22,7 @@ def reduced_chi_squared(x, y, y_exp, unc, params):
     return chi_squared / (len(y) - params)
 
 # Load data
-data = np.loadtxt('var_voltage.csv', delimiter=',', skiprows=1)
+data = np.loadtxt('/Users/hachemfattouh/Desktop/random files 5 the will to survive/Physics224-1/Charge Mass Ratio/var_voltage.csv', delimiter=',', skiprows=1)
 voltage = data[:,0]
 x_unc = data[:,1]
 radius = (data[:,2]/2)*10e-2
@@ -37,12 +37,12 @@ popt, pcov = curve_fit(f, voltage, radius, sigma=x_unc, maxfev=1000)
 pstd = np.sqrt(np.diag(pcov))
 
 # Plot data
-plt.errorbar(voltage, radius, xerr=x_unc, yerr=y_unc, fmt='o', label='Data')
-plt.plot(voltage, f(voltage, *popt), label='Fit')
-plt.ylabel('Radius (cm)')
-plt.xlabel('Voltage (V)')
-plt.legend()
-plt.show()
+#plt.errorbar(voltage, radius, xerr=x_unc, yerr=y_unc, fmt='o', label='Data')
+#plt.plot(voltage, f(voltage, *popt), label='Fit')
+#plt.ylabel('Radius (cm)')
+#plt.xlabel('Voltage (V)')
+#plt.legend()
+#plt.savefig('voltage.png')
 
 # Plot residuals
 residuals = radius - f(voltage, *popt)
@@ -50,7 +50,7 @@ plt.errorbar(voltage, residuals, xerr=x_unc, yerr=y_unc, fmt='o', label='Data')
 plt.axhline(0, color='black', lw=1, linestyle='--')
 plt.ylabel('Residuals')
 plt.xlabel('Voltage (V)')
-plt.show()
+plt.savefig('voltage_residuals.png')
 
 # Print curve fit values
 chi2 = reduced_chi_squared(voltage, radius, f(voltage, *popt), x_unc, 1)
