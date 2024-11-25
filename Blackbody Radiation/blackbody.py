@@ -8,6 +8,9 @@ from scipy.optimize import curve_fit
 # Define constants
 A = 13900
 B = 1.689
+T_0 = 293
+R_0 = 1.1
+a_0 = 4.5*10e-3
 
 
 # Define chi squared function
@@ -19,18 +22,24 @@ def reduced_chi_squared(x, y, y_exp, unc, params):
     return chi_squared / (len(y) - params)
 
 def get_wavelength(seperation):
-    return A/(-B + np.sqrt(((2/np.sqrt(3))*np.sin(seperation) + (1/2))**2 + (3/4)))
+    return np.sqrt(A/(-B + np.sqrt(((2/np.sqrt(3))*np.sin(seperation) + (1/2))**2 + (3/4))))
+
+def get_temperature(voltage, current):
+    return T_0 + ((voltage/(current * R_0)) - 1) / a_0
 
 
 # Load data
 data = np.loadtxt('langle.csv', delimiter=',', skiprows=1)
 voltage = data[:,0]
 current = data[:,1]
-seperation = data[:,3] - data[:,2]
+seperation = (data[:,3] - data[:,2])*(np.pi/180)
 area_curve = data[:,4]
 
 wavelength = get_wavelength(seperation)
+temperature = get_temperature(voltage, current)
+print(seperation)
 print(wavelength)
+print(temperature)
 
 # # Define model
 # def f(x, em_ratio):
