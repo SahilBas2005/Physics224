@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 
 # Define constants
-A = 13900 *10e-9
+A = 13900
 B = 1.689
 
 
@@ -19,7 +19,7 @@ def reduced_chi_squared(x, y, y_exp, unc, params):
     return chi_squared / (len(y) - params)
 
 def get_wavelength(seperation):
-    return np.sqrt(A/(-B + np.sqrt(((2/np.sqrt(3))*np.sin(seperation) + (1/2))**2 + (3/4))))
+    return A/(-B + np.sqrt(((2/np.sqrt(3))*np.sin(seperation) + (1/2))**2 + (3/4)))
 
 
 # Load data
@@ -32,13 +32,13 @@ area_curve = data[:,4]
 wavelength = get_wavelength(seperation)
 print(wavelength)
 
-# Define model
-def f(x, em_ratio):
-    return (np.sqrt(voltage))/(np.sqrt(em_ratio)*k*(x + (B_e/(np.sqrt(20)*k))))
-
-# Curve fit
-popt, pcov = curve_fit(f, current, radius, sigma=x_unc)
-pstd = np.sqrt(np.diag(pcov))
+# # Define model
+# def f(x, em_ratio):
+#     return (np.sqrt(voltage))/(np.sqrt(em_ratio)*k*(x + (B_e/(np.sqrt(20)*k))))
+#
+# # Curve fit
+# popt, pcov = curve_fit(f, current, radius, sigma=x_unc)
+# pstd = np.sqrt(np.diag(pcov))
 
 # # Plot data
 # plt.errorbar(current, radius, xerr=x_unc, yerr=y_unc, fmt='o', label='Data')
