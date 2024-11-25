@@ -20,6 +20,7 @@ def reduced_chi_squared(x, y, y_exp, unc, params):
 
 def get_wavelength(seperation):
     return A/(-B + np.sqrt(((2/np.sqrt(3))*np.sin(seperation) + (1/2))**2 + (3/4)))
+    return A/(B + np.sqrt(((2/np.sqrt(3))*np.sin(seperation) + (1/2))**2 + (3/4)))
 
 
 # Load data
