@@ -26,7 +26,7 @@ def correct_b_field(b_field, r):
     return b_field*(1 - ((r**4) / (R**4*(0.6583 + 0.29*(r/R)**2)**2)))
 
 # Load data
-data = np.loadtxt('var_current.csv', delimiter=',', skiprows=1)
+data = np.loadtxt('/Users/hachemfattouh/Desktop/random files 5 the will to survive/Physics224-1/Charge Mass Ratio/var_current.csv', delimiter=',', skiprows=1)
 current = data[:,0]
 x_unc = (data[:,3]/2)*10e-2
 radius = (data[:,2]/2)*10e-2
@@ -55,7 +55,6 @@ plt.errorbar(radius, residuals, xerr=x_unc, yerr=y_unc, fmt='o', label='Data')
 plt.axhline(0, color='black', lw=1, linestyle='--')
 plt.ylabel('Residuals')
 plt.xlabel('Radius (m)')
-plt.show()
 
 # Print curve fit values
 chi2 = reduced_chi_squared(radius, b_coil, f(radius, *popt), x_unc, 1)

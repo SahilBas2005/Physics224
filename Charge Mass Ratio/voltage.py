@@ -38,12 +38,12 @@ popt, pcov = curve_fit(f, voltage, radius, sigma=x_unc, maxfev=1000)
 pstd = np.sqrt(np.diag(pcov))
 
 # Plot data
-#plt.errorbar(voltage, radius, xerr=x_unc, yerr=y_unc, fmt='o', label='Data')
-#plt.plot(voltage, f(voltage, *popt), label='Fit')
-#plt.ylabel('Radius (cm)')
-#plt.xlabel('Voltage (V)')
-#plt.legend()
-#plt.savefig('voltage.png')
+plt.errorbar(voltage, radius, xerr=x_unc, yerr=y_unc, fmt='o', label='Data')
+plt.plot(voltage, f(voltage, *popt), label='Fit')
+plt.ylabel('Radius (cm)')
+plt.xlabel('Voltage (V)')
+plt.legend()
+
 
 # Plot residuals
 residuals = radius - f(voltage, *popt)
@@ -51,7 +51,6 @@ plt.errorbar(voltage, residuals, xerr=x_unc, yerr=y_unc, fmt='o', label='Data')
 plt.axhline(0, color='black', lw=1, linestyle='--')
 plt.ylabel('Residuals')
 plt.xlabel('Voltage (V)')
-plt.savefig('voltage_residuals.png')
 
 # Print curve fit values
 chi2 = reduced_chi_squared(voltage, radius, f(voltage, *popt), x_unc, 1)

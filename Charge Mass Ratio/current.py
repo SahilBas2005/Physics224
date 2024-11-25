@@ -24,7 +24,7 @@ def reduced_chi_squared(x, y, y_exp, unc, params):
 
 
 # Load data
-data = np.loadtxt('var_current.csv', delimiter=',', skiprows=2)
+data = np.loadtxt('/Users/hachemfattouh/Desktop/random files 5 the will to survive/Physics224-1/Charge Mass Ratio/var_current.csv', delimiter=',', skiprows=2)
 current = data[:,0]
 x_unc = data[:,1]
 radius = (data[:,2]/2)*10e-2
@@ -39,12 +39,11 @@ popt, pcov = curve_fit(f, current, radius, sigma=x_unc)
 pstd = np.sqrt(np.diag(pcov))
 
 # Plot data
-#plt.errorbar(current, radius, xerr=x_unc, yerr=y_unc, fmt='o', label='Data')
-#plt.plot(current, f(current, *popt), label='Fit')
-#plt.ylabel('Radius (cm)')
-#plt.xlabel('Current (A)')
-#plt.legend()
-#plt.savefig('current.png')
+plt.errorbar(current, radius, xerr=x_unc, yerr=y_unc, fmt='o', label='Data')
+plt.plot(current, f(current, *popt), label='Fit')
+plt.ylabel('Radius (cm)')
+plt.xlabel('Current (A)')
+plt.legend()
 
 # Plot residuals
 residuals = radius - f(current, *popt)
@@ -52,7 +51,6 @@ plt.errorbar(current, residuals, xerr=x_unc, yerr=y_unc, fmt='o', label='Data')
 plt.axhline(0, color='black', lw=1, linestyle='--')
 plt.ylabel('Residuals')
 plt.xlabel('Current (A)')
-plt.savefig('current_residuals.png')
 
 # Print curve fit values
 chi2 = reduced_chi_squared(current, radius, f(current, *popt), x_unc, 1)
