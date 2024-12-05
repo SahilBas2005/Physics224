@@ -53,8 +53,8 @@ data = np.loadtxt('langle2.csv', delimiter=',', skiprows=1)
 voltage = data[:,0]
 current = data[:,1]
 seperation = (data[:,3] - data[:,2])
-area_curve = data[:,4] * 2*h*(c**2)/k
-area_unc = data[:,5] * 2*h*(c**2)/k
+area_curve = data[:,4] * 2*h*(c**2)/k # Convert intensities using Planck's radiation law
+area_unc = data[:,5] * 2*h*(c**2)/k #  Convert intensities using Planck's radiation law
 
 wavelength = get_wavelength(seperation) *1e-9
 y_unc = lambda_unc(wavelength)
