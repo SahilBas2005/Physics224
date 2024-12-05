@@ -10,7 +10,7 @@ A = 13900
 B = 1.689
 T_0 = 293
 R_0 = 1.1
-a_0 = 4.5*10e-3
+a_0 = 4.5e-3
 
 
 # Define chi squared function
@@ -22,40 +22,50 @@ def reduced_chi_squared(x, y, y_exp, unc, params):
     return chi_squared / (len(y) - params)
 
 def get_wavelength(seperation):
-    return np.sqrt(A/(-B + np.sqrt(((2/np.sqrt(3))*np.sin(seperation) + (1/2))**2 + (3/4))))
+    return np.sqrt(A/(-B + np.sqrt(((2/np.sqrt(3))*np.sin(seperation*(np.pi/180)) + (1/2))**2 + (3/4))))
 
 def get_temperature(voltage, current):
     return T_0 + ((voltage/(current * R_0)) - 1) / a_0
 
+def f(x, a, b):
+    return a/x
+
+def lambda_unc(x):
+    return 0.045*x
+
+def ideal(x):
+    return 2.898e-3/x
+
 
 # Load data
-data = np.loadtxt('langle.csv', delimiter=',', skiprows=1)
+data = np.loadtxt('langle2.csv', delimiter=',', skiprows=1)
 voltage = data[:,0]
 current = data[:,1]
-seperation = (data[:,3] - data[:,2])*(np.pi/180)
-area_curve = data[:,4]
+seperation = (data[:,3] - data[:,2])
+# area_curve = data[:,4]
 
-wavelength = get_wavelength(seperation)
+wavelength = get_wavelength(seperation) *1e-9
+y_unc = lambda_unc(wavelength)
 temperature = get_temperature(voltage, current)
 print(seperation)
 print(wavelength)
 print(temperature)
 
-# # Define model
-# def f(x, em_ratio):
-#     return (np.sqrt(voltage))/(np.sqrt(em_ratio)*k*(x + (B_e/(np.sqrt(20)*k))))
-#
-# # Curve fit
-# popt, pcov = curve_fit(f, current, radius, sigma=x_unc)
+# Define model
+
+# Curve fit
+popt, pcov = curve_fit(f, temperature, wavelength)
 # pstd = np.sqrt(np.diag(pcov))
 
-# # Plot data
-# plt.errorbar(current, radius, xerr=x_unc, yerr=y_unc, fmt='o', label='Data')
-# plt.plot(current, f(current, *popt), label='Fit')
-# plt.ylabel('Radius (cm)')
-# plt.xlabel('Current (A)')
-# plt.legend()
-#
+# Plot data
+plt.errorbar(temperature, wavelength, yerr=y_unc, fmt='o', label='Data')
+plt.plot(temperature, f(temperature, *popt), label='Fit')
+plt.plot(temperature, ideal(temperature), label='Ideal')
+plt.ylabel('')
+plt.xlabel('')
+plt.legend()
+plt.show()
+
 # # Plot residuals
 # residuals = radius - f(current, *popt)
 # plt.errorbar(current, residuals, xerr=x_unc, yerr=y_unc, fmt='o', label='Data')
@@ -68,3 +78,4 @@ print(temperature)
 # print('Reduced Chi Squared:', chi2)
 # print('e/m:', popt[0])
 # print('Uncertainty:', pstd[0])
+print(popt[0])
